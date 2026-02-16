@@ -26,10 +26,29 @@ def save_pruned_template(pruned_template: str, tool_context: ToolContext):
     }
 
 
+def save_pruned_template_reasoning(pruned_template_reasoning: str, tool_context: ToolContext):
+    """Save the reasoning for the pruned template to shared state. Call once after save_pruned_template.
+
+    Provide a clear explanation for why each line or section in the pruned template was
+    KEPT or REMOVED, referencing the initial template and reviewed_summary.
+
+    Args:
+        pruned_template_reasoning: Explanation per line/section: KEEP/REMOVE and why
+            (evidence or lack thereof in reviewed_summary vs template).
+        tool_context: ADK tool context (injected); provides access to shared state.
+    """
+    tool_context.state["pruned_template_reasoning"] = pruned_template_reasoning
+    return {
+        "status": "success",
+        "state_updated": ["pruned_template_reasoning"],
+        "message": "Pruned template reasoning saved successfully.",
+    }
+
+
 pruner_agent = LlmAgent(
     name="pruner",
-    model="gemini-2.5-flash",
+    model="gemini-2.5-pro",
     description="Subagent that prunes unsupported content from the template.",
     instruction=INSTRUCTIONS,
-    tools=[save_pruned_template]
+    tools=[save_pruned_template, save_pruned_template_reasoning],
 )

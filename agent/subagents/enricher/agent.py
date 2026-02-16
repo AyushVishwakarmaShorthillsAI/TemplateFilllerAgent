@@ -26,10 +26,28 @@ def save_enriched_template(enriched_template: str, tool_context: ToolContext):
     }
 
 
+def save_enriched_template_reasoning(enriched_template_reasoning: str, tool_context: ToolContext):
+    """Save the reasoning for the enriched template to shared state. Call once after save_enriched_template.
+
+    Explain why each added line or section was included and where, referencing reviewed_summary.
+
+    Args:
+        enriched_template_reasoning: Explanation per added line/section: which fact from
+            reviewed_summary, where it was inserted in the template.
+        tool_context: ADK tool context (injected); provides access to shared state.
+    """
+    tool_context.state["enriched_template_reasoning"] = enriched_template_reasoning
+    return {
+        "status": "success",
+        "state_updated": ["enriched_template_reasoning"],
+        "message": "Enriched template reasoning saved successfully.",
+    }
+
+
 enricher_agent = LlmAgent(
     name="enricher",
-    model="gemini-2.5-flash",
+    model="gemini-2.5-pro",
     description="Subagent that enriches the filled template with additional relevant clinical information.",
     instruction=INSTRUCTIONS,
-    tools=[save_enriched_template],
+    tools=[save_enriched_template, save_enriched_template_reasoning],
 )

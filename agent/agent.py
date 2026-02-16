@@ -67,9 +67,10 @@ def display_all_states(tool_context: ToolContext):
     """Return a structured list of all pipeline state keys and their values for the user to see.
 
     Call this when the user asks to display or show all saved states. Reads from shared state:
-    template, reviewed_summary, pruned_template, filled_template, enriched_template,
-    final_filled_template. Return this tool's output to the user verbatim when they ask
-    to see saved state.
+    template, reviewed_summary, then each template followed by its reasoning (pruned_template,
+    pruned_template_reasoning, filled_template, filled_template_reasoning, enriched_template,
+    enriched_template_reasoning), then final_filled_template. Return this tool's output to
+    the user verbatim when they ask to see saved state.
 
     Args:
         tool_context: ADK tool context (injected); provides access to shared state.
@@ -78,8 +79,11 @@ def display_all_states(tool_context: ToolContext):
         "template",
         "reviewed_summary",
         "pruned_template",
+        "pruned_template_reasoning",
         "filled_template",
+        "filled_template_reasoning",
         "enriched_template",
+        "enriched_template_reasoning",
         "final_filled_template",
     ]
     lines = [
@@ -121,7 +125,7 @@ pipeline_agent = SequentialAgent(
 
 root_agent = LlmAgent(
     name="template_filler",
-    model="gemini-2.5-flash",
+    model="gemini-2.5-pro",
     description="Root agent handling user IO and executing template processing workflow.",
     sub_agents=[pipeline_agent],
     tools=[save_initial_inputs, save_final_filled_template, display_all_states],

@@ -19,21 +19,20 @@ PRESERVE PLACEHOLDERS: Leave all placeholders like {name of condition} exactly a
 MAINTAIN FORMATTING: Preserve all original formatting, line breaks, and structure exactly.
 HANDLE LISTS: When a sentence lists multiple items (e.g., "behaviours including X, Y, Z"), remove only the specific items not supported by the summary while keeping the items that ARE supported.
 
-Tool Usage (MANDATORY):
-After creating the final pruned template, you MUST call the available tool:
-save_pruned_template
+Tool Usage (MANDATORY - in this order):
+1. First call save_pruned_template EXACTLY once with the final pruned template:
+   { "pruned_template": "<FINAL PRUNED TEMPLATE TEXT>" }
 
-Call the tool EXACTLY once using this format:
+2. Then call save_pruned_template_reasoning EXACTLY once with your reasoning:
+   { "pruned_template_reasoning": "<REASONING TEXT>" }
 
-{
-  "pruned_template": "<FINAL PRUNED TEMPLATE TEXT>"
-}
+Reasoning requirement:
+For save_pruned_template_reasoning, explain why each line or section in the pruned template was KEPT or REMOVED compared to the initial template and the reviewed_summary. For each kept section: cite the supporting evidence in the summary. For each removed section: state that no supporting evidence was found. Be concise but clear (e.g. by paragraph or bullet).
 
 Output Rules:
-- Do NOT return the pruned template as normal text.
-- Do NOT add any explanation, reasoning, or commentary.
-- The tool call is the ONLY valid final action.
+- Do NOT return the pruned template or reasoning as normal text.
+- Use ONLY the two tool calls above; no other commentary.
 
 Completion Rule:
-After the tool reports success, STOP immediately and take no further action.
+After both tools report success, STOP immediately and take no further action.
 """

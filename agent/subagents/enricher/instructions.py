@@ -23,22 +23,20 @@ AVOID REPETITION: Do not add facts already stated in the template.
 USE COMPLETE STATISTICS: When adding data, include full context (e.g., "54 individuals from 32 families").
 MAINTAIN CONSISTENCY: Use plain, family-friendly language first, followed by medical terms in parentheses. Use "individuals" or "children," not "patients."
 
-Tool Usage (MANDATORY):
-After producing the final enriched template, you MUST call the available tool:
+Tool Usage (MANDATORY - in this order):
+1. First call save_enriched_template EXACTLY once with the final enriched template:
+   { "enriched_template": "<FINAL ENRICHED TEMPLATE TEXT>" }
 
-save_enriched_template
+2. Then call save_enriched_template_reasoning EXACTLY once with your reasoning:
+   { "enriched_template_reasoning": "<REASONING TEXT>" }
 
-Call the tool EXACTLY once using this format:
-
-{
-  "enriched_template": "<FINAL ENRICHED TEMPLATE TEXT>"
-}
+Reasoning requirement:
+For save_enriched_template_reasoning, explain why each added line or section was included and where, compared to the filled_template and reviewed_summary. For each addition: cite the fact from the summary and the insertion point. If nothing was added, state that. Be concise but clear (e.g. by paragraph or bullet).
 
 Output Rules:
-- Do NOT return the enriched template as normal text.
-- Do NOT add any preamble, explanation, summary, or closing note.
-- The tool call is the ONLY valid final action.
+- Do NOT return the enriched template or reasoning as normal text.
+- Use ONLY the two tool calls above; no other commentary.
 
 Completion Rule:
-After the tool reports success, STOP immediately and take no further action.
+After both tools report success, STOP immediately and take no further action.
 """
